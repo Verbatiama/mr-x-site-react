@@ -1,54 +1,21 @@
-import { useState, useEffect } from "react";
-import "./App.css";
-
-const query = `
-{
-  homePageCollection {
-    items {
-      title
-      logo {
-        url
-      }
-    }
-  }
-}
-`;
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import navbar from "./components/navbar"
+import Gossip from "./Pages/Gossip"
+import Island from "./Pages/Island"
+import Mrx from "./Pages/MrX"
+import Home from "./Pages/Home";
 
 function App() {
-  const [page, setPage] = useState(null);
-
-  useEffect(() => {
-    window
-      .fetch(`https://graphql.contentful.com/content/v1/spaces/cymgxzee6713/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer AibqpEpN1RVZ97W_YDZZ-Es-3tY9LR73itNkSqhNdYo",
-        },
-        body: JSON.stringify({ query }),
-      })
-      .then((response) => response.json())
-      .then(({ data, errors }) => {
-        if (errors) {
-          console.error(errors);
-        }
-
-        setPage(data.homePageCollection.items[0]);
-      });
-  }, []);
-
-  if (!page) {
-    return "Loading...";
-  }
-
-  // render the fetched Contentful data
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={page.logo.url} className="App-logo" alt="logo" />
-        <p>{page.title}</p>
-      </header>
-    </div>
+    <Router>
+      <navbar />
+      <Switch>
+        <Route path='/' exact component={Home} />
+        <Route path='/gossip' component={Gossip} />
+        <Route path='/Island' component={Island} />
+        <Route path='/MrX' component={Mrx} />
+      </Switch>
+    </Router>
   );
 }
 
